@@ -21,10 +21,17 @@ if (!$question) {
     die("Question not found.");
 }
 
+$sort = $_GET['sort'] ?? 'recent';
+$sort_column = ($sort === 'liked') ? 'like_count DESC' : 'a.created_at DESC';
+
 // Fetch approved answers along with the user's JCU number
-$answers_query = "SELECT a.*, u.jcu_number FROM answers a 
+$answers_query = "SELECT a.*, u.jcu_number, 
+                  (SELECT COUNT(*) FROM likes l WHERE l.answer_id = a.id) AS like_count,
+                  (SELECT COUNT(*) FROM likes l WHERE l.answer_id = a.id AND l.user_id = '$user_id') AS user_liked
+                  FROM answers a 
                   JOIN users u ON a.user_id = u.id
-                  WHERE a.question_id = '$question_id' AND a.approved = 1";
+                  WHERE a.question_id = '$question_id' AND a.approved = 1
+                  ORDER BY $sort_column";
 $answers_result = mysqli_query($conn, $answers_query);
 
 // Handle answer submission
@@ -108,6 +115,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
     <?php endif; ?>
 
     <h4 class="mt-4">Answers</h4>
+    <div class="d-flex justify-content-end align-items-center mb-2">
+        <label for="sort fw-bold"><b>Sort by:</b></label>
+        <select id="sort" class="form-select w-auto ms-2">
+            <option value="recent" <?= ($sort == 'recent') ? 'selected' : '' ?>>Most Recent</option>
+            <option value="liked" <?= ($sort == 'liked') ? 'selected' : '' ?>>Most Liked</option>
+        </select>
+    </div>
     <?php if (mysqli_num_rows($answers_result) > 0): ?>
         <?php while ($answer = mysqli_fetch_assoc($answers_result)): ?>
             <div class="card mb-2">
@@ -132,6 +146,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
                             </button>
                         </div>
                     <?php endif; ?>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <button class="btn btn-sm btn-outline-primary like-btn" 
+                                data-id="<?= $answer['id'] ?>" 
+                                data-liked="<?= $answer['user_liked'] ?>">
+                            👍 <?= ($answer['user_liked'] > 0) ? 'Unlike' : 'Like' ?>
+                        </button>
+                        <span class="text-muted">Likes: <strong id="like-count-<?= $answer['id'] ?>"><?= $answer['like_count'] ?></strong></span>
+                    </div>
+
                 </div>
             </div>
         <?php endwhile; ?>
@@ -200,10 +224,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
         </div>
     </div>
 
-<!-- AJAX Scripts -->
 <script>
     $(document).ready(function () {
-        // Edit Question - Load Data into Modal
+        // Edit Question - GEt Data into Modal
         $('.edit-answer').click(function () {
             var answerId = $(this).data('id');
             var content = $(this).data('content');
@@ -227,7 +250,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
             });
         });
 
-        // Edit Question - Load Data into Modal
+        // Edit Question - Set Data into Modal
         $('.edit-question').click(function () {
             var questionId = $(this).data('id');
             var content = $(this).data('content');
@@ -267,6 +290,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
                 });
             }
         });
+
+        // Like/Unlike answer
+    $('.like-btn').click(function () {
+        var button = $(this);
+        var answerId = button.data('id');
+        var liked = button.data('liked');
+
+        $.post('like_answer.php', { answer_id: answerId }, function (response) {
+            var res = JSON.parse(response);
+            if (res.status === 'liked') {
+                button.text('👍 Unlike').data('liked', 1);
+                $('#like-count-' + answerId).text(parseInt($('#like-count-' + answerId).text()) + 1);
+            } else {
+                button.text('👍 Like').data('liked', 0);
+                $('#like-count-' + answerId).text(parseInt($('#like-count-' + answerId).text()) - 1);
+            }
+        });
+    });
+
+    // Sort answers
+    $('#sort').change(function () {
+        var sort = $(this).val();
+        window.location.href = "question.php?id=<?= $question_id ?>&sort=" + sort;
+    });
     });
 </script>
 </body>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3360
--- Generation Time: Mar 31, 2025 at 02:29 AM
+-- Generation Time: Mar 31, 2025 at 03:03 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -45,6 +45,30 @@ INSERT INTO `answers` (`id`, `question_id`, `user_id`, `content`, `created_at`, 
 (3, 7, 1, 'Creating apps that work seamlessly across different platforms (iOS, Android) can be complex and resource-intensive.', '2025-03-30 21:56:16', 1),
 (6, 14, 5, 'Oracle offers robust features like high scalability, advanced security, comprehensive data management tools, excellent performance for large-scale applications, built-in machine learning capabilities, and strong support for complex enterprise requirements.', '2025-03-30 23:29:22', 1),
 (8, 13, 1, 'Enabling personalized customer experiences.', '2025-03-31 00:09:48', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `likes`
+--
+
+CREATE TABLE `likes` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `answer_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`id`, `user_id`, `answer_id`, `created_at`) VALUES
+(33, 1, 1, '2025-03-31 00:54:08'),
+(34, 1, 8, '2025-03-31 00:54:10'),
+(41, 4, 6, '2025-03-31 00:57:52'),
+(44, 4, 1, '2025-03-31 01:02:55'),
+(45, 4, 8, '2025-03-31 01:02:58');
 
 -- --------------------------------------------------------
 
@@ -135,6 +159,14 @@ ALTER TABLE `answers`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `likes`
+--
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`answer_id`),
+  ADD KEY `answer_id` (`answer_id`);
+
+--
 -- Indexes for table `questions`
 --
 ALTER TABLE `questions`
@@ -167,6 +199,12 @@ ALTER TABLE `answers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+
+--
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
@@ -194,6 +232,13 @@ ALTER TABLE `users`
 ALTER TABLE `answers`
   ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `likes`
+--
+ALTER TABLE `likes`
+  ADD CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `questions`
