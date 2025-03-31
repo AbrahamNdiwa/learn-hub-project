@@ -5,9 +5,8 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login_page.php");
     exit();
 }
-$fullname = $_SESSION['fullname'];
-
-$initials = generate_initials($fullname);
+$jcu_number = $_SESSION['jcu_number'];
+$role = $_SESSION['role'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +32,7 @@ $initials = generate_initials($fullname);
         </a>
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <?php echo $initials; ?>
+                <?php echo $jcu_number; ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" href="logout.php">Logout</a></li>
@@ -45,8 +44,30 @@ $initials = generate_initials($fullname);
         <nav class="sidebar bg-light vh-100 p-3" id="sidebar">
             <ul class="nav flex-column">
                 <li class="nav-item"><a href="#" class="nav-link load-page" data-page="dashboard_main.php">Dashboard</a></li>
-                <li class="nav-item"><a href="#" class="nav-link load-page" data-page="mynotes.php">My Notes</a></li>
-                <li class="nav-item"><a href="#" class="nav-link load-page" data-page="bookmarks.php">Bookmarks</a></li>
+                <li class="nav-item"><a href="#" class="nav-link load-page" data-page="myquestions.php">My Questions</a></li>
+                <li class="nav-item"><a href="#" class="nav-link load-page" data-page="myanswers.php">My Answers</a></li>
+                <?php 
+                if($role == 'admin')
+                {
+                    ?>
+                        <li class="nav-item"><a href="#" class="nav-link load-page" data-page="question_approvals.php">Approve Questions (Admin)</a></li>
+                    <?php
+                }
+
+                if($role == 'admin')
+                {
+                    ?>
+                        <li class="nav-item"><a href="#" class="nav-link load-page" data-page="answer_approvals.php">Approve Answers (Admin)</a></li>
+                    <?php
+                }
+
+                if($role == 'admin')
+                {
+                    ?>
+                        <li class="nav-item"><a href="#" class="nav-link load-page" data-page="subjects.php">Manage Subjects (Admin)</a></li>
+                    <?php
+                }
+                ?>
                 <li class="nav-item"><a href="#" class="nav-link load-page" data-page="settings.php">Settings</a></li>
             </ul>
         </nav>

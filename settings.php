@@ -7,18 +7,16 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$fullname = $_SESSION['fullname'];
-$email = $_SESSION['email'];
+$jcu_number = $_SESSION['jcu_number'];
+$role = $_SESSION['role'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['update_profile'])) {
-        $new_name = mysqli_real_escape_string($conn, strip_tags($_POST['fullname']) );
-        $new_email = mysqli_real_escape_string($conn, strip_tags($_POST['email']));
+        $jcunumber = mysqli_real_escape_string($conn, strip_tags($_POST['jcu_number']) );
         
-        $update_query = "UPDATE users SET fullname='$new_name', email='$new_email' WHERE id='$user_id'";
+        $update_query = "UPDATE users SET jcu_number='$jcunumber' WHERE id='$user_id'";
         if (mysqli_query($conn, $update_query)) {
-            $_SESSION['fullname'] = $new_name;
-            $_SESSION['email'] = $new_email;
+            $_SESSION['jcu_number'] = $jcunumber;
             echo "<script>alert('Profile updated successfully'); window.location.href = 'dashboard.php';</script>";
         } else {
             echo "<script>alert('Error updating profile'); window.location.href = 'dashboard.php';</script>";
@@ -67,12 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h3>Account Settings</h3>
         <form method="POST" action="settings.php">
             <div class="mb-2">
-                <label class="form-label">Full Name</label>
-                <input type="text" name="fullname" class="form-control" value="<?php echo htmlspecialchars($fullname); ?>" required>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($email); ?>" required>
+                <label class="form-label">JCU Number</label>
+                <input type="text" name="jcu_number" class="form-control" value="<?php echo htmlspecialchars($jcu_number); ?>" required>
             </div>
             <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
         </form>
