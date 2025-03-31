@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3360
--- Generation Time: Mar 31, 2025 at 03:03 AM
+-- Generation Time: Mar 31, 2025 at 12:04 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -36,16 +36,6 @@ CREATE TABLE `answers` (
   `approved` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `answers`
---
-
-INSERT INTO `answers` (`id`, `question_id`, `user_id`, `content`, `created_at`, `approved`) VALUES
-(1, 13, 1, 'E-business technologies enable digital transformation by providing online transaction capabilities, improving customer engagement through digital platforms, allowing real-time data analytics, facilitating global market reach, and creating more efficient supply chain management.', '2025-03-30 21:48:43', 1),
-(3, 7, 1, 'Creating apps that work seamlessly across different platforms (iOS, Android) can be complex and resource-intensive.', '2025-03-30 21:56:16', 1),
-(6, 14, 5, 'Oracle offers robust features like high scalability, advanced security, comprehensive data management tools, excellent performance for large-scale applications, built-in machine learning capabilities, and strong support for complex enterprise requirements.', '2025-03-30 23:29:22', 1),
-(8, 13, 1, 'Enabling personalized customer experiences.', '2025-03-31 00:09:48', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -59,17 +49,6 @@ CREATE TABLE `likes` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `likes`
---
-
-INSERT INTO `likes` (`id`, `user_id`, `answer_id`, `created_at`) VALUES
-(33, 1, 1, '2025-03-31 00:54:08'),
-(34, 1, 8, '2025-03-31 00:54:10'),
-(41, 4, 6, '2025-03-31 00:57:52'),
-(44, 4, 1, '2025-03-31 01:02:55'),
-(45, 4, 8, '2025-03-31 01:02:58');
-
 -- --------------------------------------------------------
 
 --
@@ -82,18 +61,9 @@ CREATE TABLE `questions` (
   `subject_id` int(11) NOT NULL,
   `question` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `approved` int(11) NOT NULL DEFAULT 0
+  `approved` int(11) NOT NULL DEFAULT 0,
+  `hidden` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `questions`
---
-
-INSERT INTO `questions` (`id`, `user_id`, `subject_id`, `question`, `created_at`, `approved`) VALUES
-(4, 1, 3, 'How does implementation differ from the initial design phase of an IT project?', '2025-03-30 18:22:23', 1),
-(7, 1, 4, 'What are the current challenges in mobile technology development?', '2025-03-30 18:28:07', 1),
-(13, 1, 6, 'How do e-business technologies transform traditional business models?', '2025-03-30 19:43:02', 1),
-(14, 4, 7, 'What makes Oracle a preferred enterprise database management system?', '2025-03-30 22:07:55', 1);
 
 -- --------------------------------------------------------
 
@@ -131,7 +101,7 @@ INSERT INTO `subjects` (`id`, `code`, `name`) VALUES
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `jcu_number` varchar(20) NOT NULL,
+  `jcu_number` text NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('student','admin') NOT NULL DEFAULT 'student'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -141,10 +111,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `jcu_number`, `password`, `role`) VALUES
-(1, 'CIT-221-023/2017', '$2y$10$ojCribSrW5ISAP9qyGoAaeP.uYPC2vPbRozs6pkFuFHyn5wwVGxEe', 'admin'),
-(4, 'CIT-221-023/2018', '$2y$10$sy3KY86T2htTUzpoVmbKqOuh0msu3.TH9f7tkOrW6AHHlUpce0I6q', 'student'),
-(5, 'CIT-221-023/2016', '$2y$10$AF.5hi7GwOYn0.ptMWaqM.h9jc85Jk0uoLcNjxCQAw.uXumA9KDry', 'student'),
-(6, 'CIT-221-023/2019', '$2y$10$kzV46y5BO.dtt27jpLXh9em2uxZTIvN7BX6peZi1jYSINLjKlnUWi', 'admin');
+(9, 'abrahamkiprotich.ndiwa@my.jcu.edu.au', '$2y$10$wDo0cjNM48g/aiSvM3Vdz.8odPEjG.7l3UZnKSSKUKi9yOzttyDNS', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -186,7 +153,7 @@ ALTER TABLE `subjects`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `jc_number` (`jcu_number`);
+  ADD UNIQUE KEY `jc_number` (`jcu_number`) USING HASH;
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -208,7 +175,7 @@ ALTER TABLE `likes`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `subjects`
@@ -220,7 +187,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
