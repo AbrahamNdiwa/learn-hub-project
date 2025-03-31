@@ -13,11 +13,11 @@ while ($subject_row = mysqli_fetch_assoc($subjects_result)) {
     $subjects[$subject_row['id']] = $subject_row['code'] . " - " . $subject_row['name'];
 }
 
-// Fetch 10 most recent approved questions
+// Get 10 most recent approved questions
 $questions_query = "SELECT q.*, 
                    (SELECT COUNT(*) FROM answers a WHERE a.question_id = q.id AND a.approved = 1) AS answer_count
                    FROM questions q 
-                   WHERE q.approved = 1 
+                   WHERE q.approved = 1 AND q.hidden = 0
                    ORDER BY q.created_at DESC 
                    LIMIT 10";
 $questions_result = mysqli_query($conn, $questions_query);
@@ -85,7 +85,7 @@ $questions_result = mysqli_query($conn, $questions_query);
                             </h5>
                             <p class="text-muted"><?= $row['answer_count']; ?> Answers</p>
 
-                            <!-- Edit/Delete Buttons -->
+                            <!-- Edit/Delete & Hide Buttons -->
                             <?php if ($user_id && ($user_id == $row['user_id'] || $role == 'admin')): ?>
                                 <div class="d-flex gap-2">
                                     <?php if ($user_id == $row['user_id']): ?>
@@ -100,8 +100,16 @@ $questions_result = mysqli_query($conn, $questions_query);
                                             data-id="<?= $row['id'] ?>">
                                         Delete
                                     </button>
+                                    <?php if ($role == 'admin'): ?>
+                                        <button class="btn btn-sm btn-outline-warning toggle-visibility" 
+                                                data-id="<?= $row['id'] ?>" 
+                                                data-hidden="<?= $row['hidden'] ?>">
+                                            <?= $row['hidden'] ? 'Unhide' : 'Hide' ?>
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
+
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -146,7 +154,7 @@ $questions_result = mysqli_query($conn, $questions_query);
                     }
                 });
             });
-            
+
             // Edit Question - Load Data into Modal
             $('.edit-question').click(function () {
                 var questionId = $(this).data('id');
@@ -186,6 +194,24 @@ $questions_result = mysqli_query($conn, $questions_query);
                     });
                 }
             });
+
+            $('.toggle-visibility').click(function () {
+        var questionId = $(this).data('id');
+        var isHidden = $(this).data('hidden');
+
+        $.ajax({
+            url: 'toggle_question_visibility.php',
+            type: 'POST',
+            data: { id: questionId, hidden: isHidden },
+            success: function (response) {
+                if (response === "Success") {
+                    location.reload();
+                } else {
+                    alert("An error occurred");
+                }
+            }
+        });
+    });
         });
     </script>
 </body>

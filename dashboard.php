@@ -64,6 +64,13 @@ $role = $_SESSION['role'];
                 if($role == 'admin')
                 {
                     ?>
+                        <li class="nav-item"><a href="#" class="nav-link load-page" data-page="hidden_questions.php">Hide/Unhide Questions (Admin)</a></li>
+                    <?php
+                }
+
+                if($role == 'admin')
+                {
+                    ?>
                         <li class="nav-item"><a href="#" class="nav-link load-page" data-page="subjects.php">Manage Subjects (Admin)</a></li>
                     <?php
                 }

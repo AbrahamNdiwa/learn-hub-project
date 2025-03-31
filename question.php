@@ -129,6 +129,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
                     <p><?= htmlspecialchars($answer['content']); ?></p>
                     <small class="text-muted">Answered by: <strong><?= htmlspecialchars($answer['jcu_number']); ?></strong></small>
 
+                    <div class="d-flex justify-content-between mt-2">
+                        <button class="btn btn-sm btn-outline-primary like-btn" 
+                                data-id="<?= $answer['id'] ?>" 
+                                data-liked="<?= $answer['user_liked'] ?>">
+                            👍 <?= ($answer['user_liked'] > 0) ? 'Unlike' : 'Like' ?>
+                        </button>
+                        <span class="text-muted">Likes: <strong id="like-count-<?= $answer['id'] ?>"><?= $answer['like_count'] ?></strong></span>
+                    </div>
+
                     <!-- Edit & Delete Buttons for Answer -->
                     <?php if ($user_id && ($user_id == $answer['user_id'] || $role === 'admin')): ?>
                         <div class="d-flex gap-2 mt-2">
@@ -146,15 +155,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
                             </button>
                         </div>
                     <?php endif; ?>
-
-                    <div class="d-flex justify-content-between mt-2">
-                        <button class="btn btn-sm btn-outline-primary like-btn" 
-                                data-id="<?= $answer['id'] ?>" 
-                                data-liked="<?= $answer['user_liked'] ?>">
-                            👍 <?= ($answer['user_liked'] > 0) ? 'Unlike' : 'Like' ?>
-                        </button>
-                        <span class="text-muted">Likes: <strong id="like-count-<?= $answer['id'] ?>"><?= $answer['like_count'] ?></strong></span>
-                    </div>
 
                 </div>
             </div>
