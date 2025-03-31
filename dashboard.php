@@ -32,7 +32,12 @@ $role = $_SESSION['role'];
         </a>
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <?php echo $jcu_number; ?>
+                <?php 
+                    $first_letter = strtoupper(substr($jcu_number, 0, 1));
+                    $parts = explode('.', $jcu_number);
+                    $second_letter = strtoupper(substr($parts[1], 0, 1));
+                    echo $first_letter; echo $second_letter;
+                ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" href="logout.php">Logout</a></li>

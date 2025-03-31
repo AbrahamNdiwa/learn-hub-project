@@ -30,7 +30,14 @@ $answers_count = mysqli_num_rows($answers_result);
 <body>
     <div class="container mt-2">
         <h2>Dashboard</h2>
-        <small class="mt-3 mb-10">Welcome <?php echo $_SESSION['jcu_number'] ?>,</small>
+        <small class="mt-3 mb-10">Welcome <?php 
+        $first_letter = strtoupper(substr($_SESSION['jcu_number'], 0, 1));
+        $parts = explode('.', $_SESSION['jcu_number']);
+        $second_letter = strtoupper(substr($parts[1], 0, 1));
+        echo $first_letter; echo $second_letter;
+        ?>,
+        
+    </small>
         <div class="row mt-2 mb-5">
             <div class="col-md-4 mb-2">
                 <div class="card p-3">
