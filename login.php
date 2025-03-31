@@ -15,7 +15,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 
         header("Location: dashboard.php");
     } else {
-        echo "Invalid credentials";
+        echo "<script>
+                alert('Invalid Credentials.');
+                window.location.href = 'login_page.php';
+              </script>";
     }
 }
 ?>

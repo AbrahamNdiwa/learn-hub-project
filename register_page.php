@@ -30,7 +30,7 @@ include 'db.php';
                                 <h4 class="text-center">Register</h4>
                                 <form action="register.php" method="POST">
                                     <div class="mb-3">
-                                        <label>JCU Number</label>
+                                        <label>JCU Email</label>
                                         <input type="text" name="jcu_number" class="form-control" required>
                                     </div>
                                     <div class="mb-3">

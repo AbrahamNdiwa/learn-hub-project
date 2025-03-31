@@ -30,7 +30,7 @@ include 'db.php';
                                 <h4 class="text-center">Login</h4>
                                 <form action="login.php" method="POST">
                                     <div class="mb-3">
-                                        <label>JCU number</label>
+                                        <label>JCU Email</label>
                                         <input type="text" name="jcu_number" class="form-control" required>
                                     </div>
                                     <div class="mb-3">
