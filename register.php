@@ -14,6 +14,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         exit();
     }
 
+    // Validate password strength
+    if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)) {
+        echo "<script>
+                alert('Password must be at least 8 characters long, include a number, a letter, and a special character.');
+                window.location.href = 'register_page.php';
+              </script>";
+        exit();
+    }
+
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
     $role = 'student';
 

@@ -26,7 +26,7 @@ include 'db.php';
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-center">
-                            <div class=" my-5">
+                            <div class="my-5">
                                 <h4 class="text-center">Register</h4>
                                 <form action="register.php" method="POST">
                                     <div class="mb-3">
@@ -36,12 +36,15 @@ include 'db.php';
                                     <div class="mb-3">
                                         <label>Password</label>
                                         <input type="password" name="password" class="form-control" required>
+                                        <small class="text-muted">
+                                            Password must be at least 8 characters long and include at least one letter, one number, and one special character.
+                                        </small>
                                     </div>
                                     <button type="submit" name="register" class="btn btn-success w-100">Register</button>
                                 </form>
 
                                 <div class="mt-4">
-                                    I have already have an account. Login <a href="login_page.php">here</a>!
+                                    I already have an account. Login <a href="login_page.php">here</a>!
                                 </div>
                             </div>
                         </div>
